@@ -10,7 +10,24 @@ const morgan= require('morgan');
 const cors = require('cors');
 
 
+////////////////////////////
+///////  ahmad  ///////////
+//////////////////////////
+const path =require('path');
+const authRoutes = require('./auth/router.js');
+const oAuth = require('./auth/middleware/fb-oauth');
+app.use(cors());
+app.use(morgan('dev'));
 
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname,'/public')));
+
+app.use('/',authRoutes );
+// app.get('/auth/facebook', oAuth, (req,res)=>{
+//   res.json({token: req.token, user:req.user});
+// });
 
 
 //////////////////////////
