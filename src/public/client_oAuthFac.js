@@ -3,7 +3,7 @@
 const authorizeUrl = '//www.facebook.com/v10.0/dialog/oauth';
 const options = {
   client_id:'2989335868017667',
-  redirect_uri:'http://localhost:3000/api/v1/auth/facebook',
+  redirect_uri:'https://vybin.herokuapp.com/api/v1/auth/facebook',
   state:'{st=state123abc,ds=123456789}',
 };
 
