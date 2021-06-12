@@ -1,7 +1,7 @@
   
 'use strict';
 
-require('dotenv').config();
+
 
 
 const supergoose = require('@code-fellows/supergoose');

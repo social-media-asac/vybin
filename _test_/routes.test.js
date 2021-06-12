@@ -1,5 +1,6 @@
 'use strict';
-require('dotenv').config();
+// require('dotenv').config();
+process.env.SECRET = 'tasnim';
 const server = require('../src/server.js').server;
 const supergoose = require('@code-fellows/supergoose');
 const route = require('../src/auth/router.js');
