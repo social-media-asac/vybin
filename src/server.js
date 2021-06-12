@@ -56,12 +56,58 @@ app.use(helmet());
 app.use(express.static(path.join(__dirname, '../public')));
 
 
+/////////////////////
+////////////////////
+//////anwar////////
+let users = [];
+
+const addUser = (userId, socketId) => {
+  !users.some((user) => user.userId === userId) &&
+    users.push({ userId, socketId });
+};
+
+const removeUser = (socketId) => {
+  users = users.filter((user) => user.socketId !== socketId);
+};
+
+const getUser = (userId) => {
+  return users.find((user) => user.userId === userId);
+};
+
 
 io.on('connection', socket => {
   console.log('finally i am connceted !!!');
-  let payload = 'ibrahim banat';
+  let payload = 'test';
   io.emit('front', payload);
+
+  //when ceonnect
+  console.log('a user connected.');
+
+  //take userId and socketId from user
+  socket.on('addUser', (userId) => {
+    addUser(userId, socket.id);
+    io.emit('getUsers', users);
+  });
+
+  //send and get message
+  socket.on('sendMessage', ({ senderId, receiverId, text }) => {
+    const user = getUser(receiverId);
+    io.to(user.socketId).emit('getMessage', {
+      senderId,
+      text,
+    });
+  });
+
+  //when disconnect
+  socket.on('disconnect', () => {
+    console.log('a user disconnected!');
+    removeUser(socket.id);
+    io.emit('getUsers', users);
+  });
 });
+
+
+
 
 
 
@@ -71,10 +117,10 @@ io.on('connection', socket => {
 ///////////////////////////
 
 // home
-app.get('/', homeHandler);
+// app.get('/', homeHandler);
 
 // routes
-app.get('/',homeHandler);
+
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', userRoute);
 app.use('/api/v1/posts', postRoute);
@@ -87,10 +133,10 @@ app.use(errorHandler);
 
 
 // home handler
-function homeHandler(req,res){
-  console.log('homeee ');
-  res.status(201).sendFile('/index.html');
-}
+// function homeHandler(req,res){
+//   console.log('homeee ');
+//   res.status(201).sendFile('/index.html');
+// }
 
 //////// socket ////////////////////
 
