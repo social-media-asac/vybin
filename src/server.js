@@ -29,6 +29,9 @@ const postRoute  = require('./api/routes/posts');
 // Update & Delete User <==> get a user <==> get followers <==> follow & un-follow a user
 const userRoute  = require('./api/routes/users.js');
 
+const googleRoutes = require( './api/routes/google.js' );
+
+const passportSetup = require('../src/auth/middleware/google-oauth.js');
 
 /////////////////////////////
 //////// Middleware  ///////
@@ -39,7 +42,7 @@ app.use(cors());
 app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
-
+app.set('view engine', 'ejs');
 
 
 
@@ -55,7 +58,7 @@ app.get('/',homeHandler);
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', userRoute);
 app.use('/api/v1/posts', postRoute);
-
+app.use('/auth', googleRoutes);
 
 
 // Error handlers

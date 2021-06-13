@@ -7,6 +7,7 @@
 4. Anwar Shraideh
 
 
+
 ## Description
 
 Vibe-in is a Social media  CRUD web application built with MERN stack. It breaks the distance between users by allowing them to share their life events and to chat with each other.
