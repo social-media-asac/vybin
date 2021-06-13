@@ -17,3 +17,4 @@ const authUrl = `${authorizeUrl}?${queryString}`;
 const a = document.getElementById('oauth');
 a.setAttribute('href', authUrl);
 
+
