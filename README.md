@@ -18,3 +18,7 @@ Kindly check our users stories from [HERE](https://trello.com/b/ZUhWSKWo/vibe-in
 
 ## Domain Modeling
 
+### **UML**
+
+![IMG](uml.PNG)
+
