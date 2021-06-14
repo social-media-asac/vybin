@@ -36,14 +36,17 @@ describe('Posts Tests ', ()=>{
     const response = await request.post('/api/v1/posts').set('Authorization', `Bearer ${token}`)
       .send(userPosts);
     expect(response.status).toBe(200);
-    expect().toEqual();
+    expect(response.body.userId).toEqual(userPosts.userId);
+    
   });
 
 
   it('cant create a post without setting the authorization', async () => {
     const response = await request.post('/api/v1/posts')
       .send(userPosts);
+    //   console.log(response.body);
     expect(response.status).toBe(500);
+    expect(response.body.error).toBe('authorization header is not provided');
   });
 
 
@@ -119,7 +122,9 @@ describe('Posts Tests ', ()=>{
     postId = postsResponse._id;
     const response = await request.put(`/api/v1/posts/${postId}/like`).set('Authorization', `Bearer ${token}`)
       .send(userPosts);
+      
     expect(response.status).toBe(200);
+    expect(response.body).toBe('The post has been liked');
   });
 
   it('cant like a specific post without authorization', async () => {
@@ -127,7 +132,9 @@ describe('Posts Tests ', ()=>{
     postId = postsResponse._id;
     const response = await request.put(`/api/v1/posts/${postId}/like`)
       .send(userPosts);
+    
     expect(response.status).toBe(500);
+    expect(response.body.error).toBe('authorization header is not provided');
   });
 
 
@@ -147,13 +154,15 @@ describe('Posts Tests ', ()=>{
   it('can get a spesific peofile by username', async () => {
     const response = await request.get(`/api/v1/posts/profile/${users.username}`).set('Authorization', `Bearer ${token}`)
       .send(users.username);
-    expect(response.status).toBe(200);
+         expect(response.status).toBe(200);
   });
     
   it('cant get a spesific peofile without authorization', async () => {
     const response = await request.get(`/api/v1/posts/profile/${users.username}`)
       .send(users.username);
+      console.log('like :***********',response.body);
     expect(response.status).toBe(500);
+    expect(response.body.error).toBe('authorization header is not provided');
   });
 
 });
