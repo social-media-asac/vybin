@@ -40,6 +40,15 @@ app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 
+/////////Ahmad///////
+
+// const path =require('path');
+
+// app.use(express.static(path.join(__dirname,'../public')));
+
+
+app.use(express.static('./public'));
+
 
 
 
@@ -51,7 +60,6 @@ app.use(helmet());
 app.get('/', homeHandler);
 
 // routes
-app.get('/',homeHandler);
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', userRoute);
 app.use('/api/v1/posts', postRoute);
@@ -65,9 +73,8 @@ app.use(errorHandler);
 
 // home handler
 function homeHandler(req,res){
-  res.status(201).send(
-    'Vibe-in Social Media',
-  );
+  
+  res.redirect('./index.html');
 }
 
 

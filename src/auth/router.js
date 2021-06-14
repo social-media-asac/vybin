@@ -7,6 +7,14 @@
 const express = require('express');
 const authRouter  = express.Router();
 
+
+
+
+
+
+
+
+
 //////////////////////////
 ////// Imports      /////
 ////////////////////////
@@ -15,6 +23,8 @@ const authRouter  = express.Router();
 const User = require('./models/users.js');
 const basicAuth = require('./middleware/basic.js');
 const bearerAuth = require('./middleware/bearer.js');
+//////Ahmad//////////
+const oAuth = require('./middleware/fb-oauth.js');
 
 
 
@@ -26,6 +36,9 @@ const bearerAuth = require('./middleware/bearer.js');
 authRouter.post('/register', signupHandler);
 authRouter.post('/signin', basicAuth, signinHandler);
 authRouter.get('/user', bearerAuth, usersHandler);
+///////ahmad////////////
+authRouter.get('/facebook', oAuth,oAuthFacebook); 
+
 
 
 
@@ -62,6 +75,12 @@ async function usersHandler (req,res,next){
   const users = await User.find({});
   const user = users.map((user) => user.username);
   res.status(200).json(user);
+}
+
+/////Ahmad//////////////
+
+async function oAuthFacebook (req,res){
+  res.json({token: req.token, user:req.user});
 }
 
 
