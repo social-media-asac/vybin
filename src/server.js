@@ -74,7 +74,7 @@ app.use(errorHandler);
 // home handler
 function homeHandler(req,res){
   
-  res.redirect('./index.html');
+  res.statuse(200).redirect('./index.html');
 }
 
 
