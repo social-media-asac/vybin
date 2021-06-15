@@ -11,8 +11,7 @@ const request = supergoose(server);
 describe('Server Test ', () => {
   it('Testing Home page', async () => {
     const response = await request.get('/');
-    expect(response.status).toEqual(201);
-    expect(response.text).toEqual('Vibe-in Social Media');
+    expect(response.status).toEqual(200);
   });
   it('Testing invalid routes', async () => {
   

@@ -25,6 +25,7 @@ const basicAuth = require('./middleware/basic.js');
 const bearerAuth = require('./middleware/bearer.js');
 //////Ahmad//////////
 const oAuth = require('./middleware/fb-oauth.js');
+const acl =require('../auth/middleware/acl');
 
 
 
@@ -35,7 +36,7 @@ const oAuth = require('./middleware/fb-oauth.js');
 
 authRouter.post('/register', signupHandler);
 authRouter.post('/signin', basicAuth, signinHandler);
-authRouter.get('/user', bearerAuth, usersHandler);
+authRouter.get('/user', bearerAuth,acl('getUser'), usersHandler);
 ///////ahmad////////////
 authRouter.get('/facebook', oAuth,oAuthFacebook); 
 
