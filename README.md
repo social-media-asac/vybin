@@ -27,10 +27,9 @@ Kindly check our users stories from [HERE](https://trello.com/b/ZUhWSKWo/vibe-in
 
 ![IMG1](register.png)
 ![IMG2](loginn.png)
-![IMG3](vibe-in-wireframe.png)
+![IMG3](vibe-in-homePage-wireframe-.png)
 ![IMG4](videochat-wireframe.png)
 
 ### **Database Schema Diagram**
 
 ![IMG5](databasediagram.PNG)
-
