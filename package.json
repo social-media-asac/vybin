@@ -4,10 +4,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "watch": "nodemon index.js",
-    "test-watch": "jest --watchAll",
-    "test": "jest"
+    "start": "node index.js",    
+    "test": "jest --coverage --verbose"
   },
   "repository": {
     "type": "git",

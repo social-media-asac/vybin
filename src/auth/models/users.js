@@ -72,11 +72,24 @@ const UserSchema = new mongoose.Schema(
       type: Number,
       enum: [1, 2, 3],
     },
+    role: {
+      type: String,
+      required: true,
+      default: 'user',
+      enum: ['user',  'admin'],
+    },
   },
   { timestamps: true },
+  
 );
 
-
+UserSchema.virtual('capabilities').get(function () {
+  const acl = {
+    user: ['read', 'create', 'update', 'delete'], 
+    admin:['read', 'create', 'update', 'delete','getUser'],
+  };
+  return acl[this.role];
+});
 
 UserSchema.virtual('token').get(function () {
   let tokenObject = {

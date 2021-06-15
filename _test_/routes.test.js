@@ -6,23 +6,30 @@ const supergoose = require('@code-fellows/supergoose');
 const route = require('../src/auth/router.js');
 const bearer = require('../src/auth/middleware/bearer.js');
 const mockRequest = supergoose(server);
-
+const jwt = require('jsonwebtoken');
+const acl = require('../src/auth/middleware/acl.js');
+const user = { username: 'user' };
+const token = jwt.sign(user, process.env.SECRET);
+const basic = { username: 'basic' };
+const basicToken = jwt.sign(basic, process.env.SECRET);
 let users = {
   
-  user: { username: 'user', password: 'password' ,email :'tasnim@'},
+  user: { username: 'user', password: 'password' ,email :'tasnim@', role : 'admin'},
+  
 };
 
+let user2 = { username: 'user', password: 'password' ,email :'tasnim@', role : 'user'};
 describe('Auth Router', () => {
 
   Object.keys(users).forEach(userType => {
   
-    describe(`${userType} users`, () => {
+    describe(`${userType} users`, () => {   
   
       it('can create one', async () => {
   
         const response = await mockRequest.post('/api/v1/auth/register').send(users[userType]);
         const userObject = response.body;
-        console.log(response.body);
+        // console.log(response.body);
         expect(response.status).toBe(201);
         expect(userObject.token).toBeDefined();
         expect(userObject.user._id).toBeDefined();
@@ -86,6 +93,30 @@ describe('Auth Router', () => {
         expect(bearerResponse.status).toBe(403);
 
       });
-    });
+      it('can get all the users', async () => {
+        
+        const response = await mockRequest.get('/api/v1/auth/user')
+          .set('Authorization', `Bearer ${token}`).send(users[userType]);
+        const userObject = response.body;
+        console.log(response.body);
+        expect(response.status).toBe(200);  
+      }); 
+      // it('cant ', async () => {
+        
+      //   const response = await mockRequest.get('/api/v1/auth/user')
+      //   .set('Authorization', `Bearer ${token}`).send(user2);
+      //   const userObject = response;
+      // console.log('userObject',userObject);
+      // expect(response.status).toBe(200);  
+    });  
   });
+  
+  // it('cant ', async () => {
+        
+  //   const response = await mockRequest.get('/api/v1/auth/user')
+  //   .set('Authorization', `Bearer ${token}`).send(user2);
+  //   const userObject = response.body;
+  //   console.log('userObject',userObject);
+  //   // expect(response.status).toBe(200);  
+  // }); 
 });

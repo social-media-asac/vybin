@@ -15,7 +15,7 @@ const bcrypt = require('bcrypt');
 
 const User = require('../../auth/models/users.js');
 const bearerAuth = require('../../auth/middleware/bearer.js');
-
+const acl = require('../../auth/middleware/acl.js');
 
 
 
@@ -24,22 +24,22 @@ const bearerAuth = require('../../auth/middleware/bearer.js');
 ///////////////////////
 
 //update user
-router.put('/:id',bearerAuth, updateUserHandler);
+router.put('/:id',bearerAuth,acl('update'), updateUserHandler);
 
 //delete user
-router.delete('/:id',bearerAuth, deleteUserHandler);
+router.delete('/:id',bearerAuth, acl('delete'), deleteUserHandler);
 
 //get a user
-router.get('/:id',bearerAuth, getUserHandler);
+router.get('/:id',bearerAuth,acl('read'), getUserHandler);
 
 //Get User Followers
 router.get('/followers/:userId', bearerAuth, getFollowersHandler);
 
 // Follow a user
-router.put('/:id/follow', bearerAuth, followHandler);
+router.put('/:id/follow', bearerAuth, acl('update'),followHandler);
 
 // Un-Follow a user
-router.put('/:id/unfollow',bearerAuth, unfollowHandler);
+router.put('/:id/unfollow',bearerAuth,acl('update'), unfollowHandler);
 
 
 /////////////////////////
