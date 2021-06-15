@@ -2,6 +2,10 @@
   "name": "vybin",
   "description": "## Team Members 1. Omar Ewies (TL) 2. Tasnim Al-wahebi 3. Ahmad Arman 4. Anwar Shraideh",
   "version": "1.0.0",
+  "engines": {
+    "node": "12.16.1",
+    "npm": "6.14.4"
+  },
   "main": "index.js",
   "scripts": {
     "start": "node index.js",    
