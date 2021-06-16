@@ -6,6 +6,7 @@
 
 const router = require('express').Router();
 const bcrypt = require('bcrypt');
+const decodedd=require('jwt-decode');
 
 
 
@@ -49,9 +50,15 @@ router.put('/:id/unfollow',bearerAuth,acl('update'), unfollowHandler);
 //=============//
 //update user //
 //===========//
-
 async function updateUserHandler (req, res) {
-  if (req.body.userId === req.params.id ) {
+
+  // let token = req.headers.authorization.split(' ').pop();
+  let token='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InV1dWZmIiwidXNlcklkIjoiNjBjYTFjODlkNTRkNDExYTJlZjUwYjFkIiwiaWF0IjoxNjIzODU4MzE4LCJleHAiOjE2MjM4NjE5MTh9.hGFcpyW--OhtTc7OCf68zEfHosT_a3ZZh3SdbQzHbSA'
+  let decodedToken= await decodedd(token);
+  console.log(decodedd(decodedToken),'xxxxxxxxxxxxxxxxxx');
+
+
+  if (decodedToken.userId === req.params.id ) {
     if (req.body.password) {
       try {
         const salt = await bcrypt.genSalt(10);
@@ -60,7 +67,10 @@ async function updateUserHandler (req, res) {
         return res.status(500).json(err);
       }
     }
+
+
     try {
+
       const user = await User.findByIdAndUpdate(req.params.id, {
         $set: req.body,
       });
@@ -96,17 +106,7 @@ async function deleteUserHandler (req, res)  {
 //===========//
 
 async function getUserHandler (req, res) {
-  // const userId = req.query.userId;
-  // const username = req.query.username;
-  // try {
-  //   const user = userId
-  //     ? await User.findById(userId)
-  //     : await User.findOne({ username: username });
-  //   const { password, updatedAt, ...other } = user._doc;
-  //   res.status(200).json(other);
-  // } catch (err) {
-  //   res.status(500).json(err);
-  // }
+
 
   try {
     const user = await User.findById(req.params.id);

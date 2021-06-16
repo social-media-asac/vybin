@@ -79,7 +79,7 @@ const UserSchema = new mongoose.Schema(
       enum: ['user',  'admin'],
     },
   },
-  { timestamps: true },
+  // { timestamps: true },
   
 );
 
@@ -94,7 +94,9 @@ UserSchema.virtual('capabilities').get(function () {
 UserSchema.virtual('token').get(function () {
   let tokenObject = {
     username: this.username,
+    userId:this._id,
   };
+  console.log(tokenObject.userId,'=============');
   return jwt.sign(tokenObject, SECRET, { expiresIn: '1hr' });
 });
 

@@ -8,13 +8,6 @@ const express = require('express');
 const authRouter  = express.Router();
 
 
-
-
-
-
-
-
-
 //////////////////////////
 ////// Imports      /////
 ////////////////////////
@@ -48,15 +41,20 @@ authRouter.get('/facebook', oAuth,oAuthFacebook);
 ////// Handlers  ////////
 ////////////////////////
 
+// const user = await User.findById(req.params.id);
+// const { password, updatedAt, ...other } = user._doc;
+// res.status(200).json(other); 
 
 async function signupHandler(req,res,next){
 
   try {
     const user = new User(req.body);
-    const savedUser = await user.save();    
+    const savedUser = await user.save(); 
+    const { password, updatedAt, ...other } = user._doc;
     res.status(201).json({
-      user: savedUser,
+      // user: savedUser,
       token: savedUser.token,
+      userData: other,
     });
   } catch (error) {
     next(error.message);
