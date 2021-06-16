@@ -31,9 +31,7 @@ describe('Auth Router', () => {
         const userObject = response.body;
         // console.log(response.body);
         expect(response.status).toBe(201);
-        expect(userObject.token).toBeDefined();
-        expect(userObject.user._id).toBeDefined();
-        expect(userObject.user.username).toEqual(users[userType].username);
+        expect(userObject.userData.username).toEqual('user');
   
       });   
     });

@@ -20,5 +20,17 @@ Kindly check our users stories from [HERE](https://trello.com/b/ZUhWSKWo/vibe-in
 
 ### **UML**
 
-![IMG](uml.PNG)
+![IMG](img/UmlPrject.PNG)
 
+### **Test**
+![IMG](img/test.PNG)
+### **Wireframe**
+
+![IMG](img/loginn.png)
+![IMG](img/register.png)
+![IMG](img/vibe-in-homepage-wireframe-.png)
+![IMG](img/videochat-wireframe.png)
+
+
+### **Database Diagram**
+![IMG](img/db.PNG)
