@@ -54,25 +54,25 @@ describe('User test', () => {
   });
   //follow
   it('Test the user can follow the others using PUT method', async () => {
-    let userResponse = await request.put(`/api/v1/users/${id}/follow`).set('Authorization', `Bearer ${token}`).send({userId:id2});
+    let userResponse = await request.put(`/api/v1/users/follow/${id}`).set('Authorization', `Bearer ${token}`).send({userId:id2});
     // console.log('userResponse',userResponse.body);
     expect(userResponse.body).toEqual('user has been followed');
     expect(userResponse.status).toBe(200);
   });
   it('Test the user cant follow the others withot setting the authorization', async () => {
-    let userResponse = await request.put(`/api/v1/users/${id}/follow`).send({userId:id2});
+    let userResponse = await request.put(`/api/v1/users/follow/${id}`).send({userId:id2});
     expect(userResponse.status).toBe(500);
   });
   it('Test the user cant follow the others without sending the user id', async () => {
-    let userResponse = await request.put(`/api/v1/users/${id}/follow`).set('Authorization', `Bearer ${token}`).send({userId:id});
+    let userResponse = await request.put(`/api/v1/users/follow/${id}`).set('Authorization', `Bearer ${token}`).send({userId:id});
     expect(userResponse.status).toBe(403);
   });
   it('Test the user can unfollow the others using PUT method', async () => {
-    let userResponse = await request.put(`/api/v1/users/${id}/unfollow`).set('Authorization', `Bearer ${token}`).send({userId:id2});
+    let userResponse = await request.put(`/api/v1/users/unfollow/${id}`).set('Authorization', `Bearer ${token}`).send({userId:id2});
     expect(userResponse.status).toBe(200);
   });
   it('Test the user cant unfollow the user that not exist', async () => {
-    let userResponse = await request.put(`/api/v1/users/${id}/unfollow`).set('Authorization', `Bearer ${token}`).send({userId:id3});
+    let userResponse = await request.put(`/api/v1/users/unfollow/${id}`).set('Authorization', `Bearer ${token}`).send({userId:id3});
     expect(userResponse.status).toBe(403);
   });
   it('Test get all the followers using get method', async () => {
@@ -103,11 +103,11 @@ describe('User test', () => {
     expect(response.status).toEqual(403);
   });
   it('Test that the user cant follow himself using PUT method', async () => {
-    let userResponse = await request.put(`/api/v1/users/${id}/follow`).set('Authorization', `Bearer ${token}`).send({userId:id});
+    let userResponse = await request.put(`/api/v1/users/follow/${id}`).set('Authorization', `Bearer ${token}`).send({userId:id});
     expect(userResponse.status).toBe(403);
   });
   it('test the user cant unfollow himself using PUT method', async () => {
-    let userResponse = await request.put(`/api/v1/users/${id}/unfollow`).set('Authorization', `Bearer ${token}`).send({userId:id});
+    let userResponse = await request.put(`/api/v1/users/unfollow/${id}`).set('Authorization', `Bearer ${token}`).send({userId:id});
     expect(userResponse.status).toBe(403);
   });
 });
