@@ -6,6 +6,7 @@
 
 const router = require('express').Router();
 const bcrypt = require('bcrypt');
+const decodeToken=require('jwt-decode');
 
 
 
@@ -36,22 +37,32 @@ router.get('/:id',bearerAuth,acl('read'), getUserHandler);
 router.get('/followers/:userId', bearerAuth, getFollowersHandler);
 
 // Follow a user
-router.put('/:id/follow', bearerAuth, acl('update'),followHandler);
+router.put('/follow/:id', bearerAuth, acl('update'),followHandler);
 
 // Un-Follow a user
-router.put('/:id/unfollow',bearerAuth,acl('update'), unfollowHandler);
+router.put('/unfollow/:id',bearerAuth,acl('update'), unfollowHandler);
 
 
 /////////////////////////
 ////// Handlers ////////
 ///////////////////////
 
+
+
+
 //=============//
 //update user //
 //===========//
-
 async function updateUserHandler (req, res) {
-  if (req.body.userId === req.params.id ) {
+
+  let token = req.headers.authorization.split(' ').pop();
+ 
+  // console.log(token,'***************************');
+  // console.log(decodeToken(token));
+  // console.log(decodeToken(token).userId);
+
+  if (decodeToken(token).userId === req.params.id ) {
+    console.log(req.params.id,'params');
     if (req.body.password) {
       try {
         const salt = await bcrypt.genSalt(10);
@@ -60,7 +71,10 @@ async function updateUserHandler (req, res) {
         return res.status(500).json(err);
       }
     }
+
+
     try {
+
       const user = await User.findByIdAndUpdate(req.params.id, {
         $set: req.body,
       });
@@ -79,7 +93,10 @@ async function updateUserHandler (req, res) {
 
 
 async function deleteUserHandler (req, res)  {
-  if (req.body.userId === req.params.id || req.body.isAdmin) {
+
+  let token = req.headers.authorization.split(' ').pop();
+
+  if (decodeToken(token).userId=== req.params.id || req.body.isAdmin) {
     try {
       await User.findByIdAndDelete(req.params.id);
       res.status(200).json('Account has been deleted');
@@ -96,17 +113,7 @@ async function deleteUserHandler (req, res)  {
 //===========//
 
 async function getUserHandler (req, res) {
-  // const userId = req.query.userId;
-  // const username = req.query.username;
-  // try {
-  //   const user = userId
-  //     ? await User.findById(userId)
-  //     : await User.findOne({ username: username });
-  //   const { password, updatedAt, ...other } = user._doc;
-  //   res.status(200).json(other);
-  // } catch (err) {
-  //   res.status(500).json(err);
-  // }
+
 
   try {
     const user = await User.findById(req.params.id);
@@ -146,12 +153,13 @@ async function getFollowersHandler (req, res) {
 //==============//
 
 async function followHandler (req, res) {
-  if (req.body.userId !== req.params.id) {
+  let token = req.headers.authorization.split(' ').pop();
+  if (decodeToken(token).userId !== req.params.id) {
     try {
       const user = await User.findById(req.params.id);
-      const currentUser = await User.findById(req.body.userId);
-      if (!user.followers.includes(req.body.userId)) {
-        await user.updateOne({ $push: { followers: req.body.userId } });
+      const currentUser = await User.findById(decodeToken(token).userId);
+      if (!user.followers.includes(decodeToken(token).userId)) {
+        await user.updateOne({ $push: { followers: decodeToken(token).userId } });
         await currentUser.updateOne({ $push: { followings: req.params.id } });
         res.status(200).json('user has been followed');
       } else {
@@ -170,12 +178,13 @@ async function followHandler (req, res) {
 // unFollow a user //
 //================//
 async function unfollowHandler (req, res) {
-  if (req.body.userId !== req.params.id) {
+  let token = req.headers.authorization.split(' ').pop();
+  if (decodeToken(token).userId !== req.params.id) {
     try {
       const user = await User.findById(req.params.id);
-      const currentUser = await User.findById(req.body.userId);
-      if (user.followers.includes(req.body.userId)) {
-        await user.updateOne({ $pull: { followers: req.body.userId } });
+      const currentUser = await User.findById(decodeToken(token).userId);
+      if (user.followers.includes(decodeToken(token).userId)) {
+        await user.updateOne({ $pull: { followers: decodeToken(token).userId } });
         await currentUser.updateOne({ $pull: { followings: req.params.id } });
         res.status(200).json('user has been unfollowed');
       } else {

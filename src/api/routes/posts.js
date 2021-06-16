@@ -5,6 +5,7 @@
 ///////////////////////
 
 const router = require('express').Router();
+const decodeToken=require('jwt-decode');
 
 
 
@@ -31,7 +32,7 @@ router.put('/:id', bearerAuth, updatePostHandler);
 router.delete('/:id', bearerAuth, deletePostHandler);
 
 //like <==> dislike a post
-router.put('/:id/like', bearerAuth, likePostHandler);
+router.put('/like/:id', bearerAuth, likePostHandler);
 
 //get a post
 router.get('/:id', bearerAuth, getPostHandler);
@@ -72,9 +73,12 @@ async function createPostHandler (req, res){
 
 
 async function updatePostHandler (req, res) {
+  let token = req.headers.authorization.split(' ').pop();
   try {
     const post = await Post.findById(req.params.id);
-    if (post.userId === req.body.userId) {
+    if (post.userId === decodeToken(token).userId) {
+      console.log(post.userId,'***********');
+      console.log(decodeToken(token).userId,'---------------------');
       await post.updateOne({ $set: req.body });
       res.status(200).json('the post has been updated');
     } else {
@@ -92,9 +96,10 @@ async function updatePostHandler (req, res) {
 
 
 async function deletePostHandler (req, res) {
+  let token = req.headers.authorization.split(' ').pop();
   try {
     const post = await Post.findById(req.params.id);
-    if (post.userId === req.body.userId) {
+    if (post.userId === decodeToken(token).userId) {
       await post.deleteOne();
       res.status(200).json('the post has been deleted');
     } else {
@@ -112,13 +117,14 @@ async function deletePostHandler (req, res) {
 
 
 async function likePostHandler (req, res) {
+  let token = req.headers.authorization.split(' ').pop();
   try {
     const post = await Post.findById(req.params.id);
-    if (!post.likes.includes(req.body.userId)) {
-      await post.updateOne({ $push: { likes: req.body.userId } });
+    if (!post.likes.includes(decodeToken(token).userId)) {
+      await post.updateOne({ $push: { likes: decodeToken(token).userId } });
       res.status(200).json('The post has been liked');
     } else {
-      await post.updateOne({ $pull: { likes: req.body.userId } });
+      await post.updateOne({ $pull: { likes: decodeToken(token).userId } });
       res.status(200).json('The post has been disliked');
     }
   } catch (err) {
@@ -145,6 +151,7 @@ async function getPostHandler (req, res) {
 //==================//
 
 async function timeLineHandler (req, res) {
+  
   try {
     const currentUser = await User.findById(req.params.userId);
     const userPosts = await Post.find({ userId: currentUser._id });
