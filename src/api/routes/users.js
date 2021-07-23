@@ -16,7 +16,7 @@ const decodeToken=require('jwt-decode');
 
 const User = require('../../auth/models/users.js');
 const bearerAuth = require('../../auth/middleware/bearer.js');
-const acl = require('../../auth/middleware/acl.js');
+// const acl = require('../../auth/middleware/acl.js');
 
 
 
@@ -25,22 +25,22 @@ const acl = require('../../auth/middleware/acl.js');
 ///////////////////////
 
 //update user
-router.put('/:id',bearerAuth,acl('update'), updateUserHandler);
+router.put('/:id',bearerAuth, updateUserHandler);
 
 //delete user
-router.delete('/:id',bearerAuth, acl('delete'), deleteUserHandler);
+router.delete('/:id',bearerAuth,  deleteUserHandler);
 
 //get a user
-router.get('/:id',bearerAuth,acl('read'), getUserHandler);
+router.get('/',bearerAuth,getUserHandler);
 
 //Get User Followers
 router.get('/followers/:userId', bearerAuth, getFollowersHandler);
 
 // Follow a user
-router.put('/follow/:id', bearerAuth, acl('update'),followHandler);
+router.put('/follow/:id', bearerAuth, followHandler);
 
 // Un-Follow a user
-router.put('/unfollow/:id',bearerAuth,acl('update'), unfollowHandler);
+router.put('/unfollow/:id',bearerAuth, unfollowHandler);
 
 
 /////////////////////////
@@ -113,10 +113,13 @@ async function deleteUserHandler (req, res)  {
 //===========//
 
 async function getUserHandler (req, res) {
-
+  const userId = req.query.userId;
+  const username = req.query.username;
 
   try {
-    const user = await User.findById(req.params.id);
+    const user = userId 
+      ? await User.findById(userId)
+      :await User.findOne({username:username});
     const { password, updatedAt, ...other } = user._doc;
     res.status(200).json(other);        
   } catch (error) {
