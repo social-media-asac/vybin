@@ -6,9 +6,7 @@
 
 const router = require('express').Router();
 const decodeToken=require('jwt-decode');
-const multer = require('multer');
-const path = require('path');
-const express= require('express');
+
 /////////////////////
 ////// Imports  ////
 ///////////////////
@@ -43,30 +41,7 @@ router.get('/timeline/:userId',bearerAuth,timeLineHandler);
 //get user's all posts
 router.get('/profile/:username',bearerAuth, userPostsHandler);
 
-// upload images
-router.use('/images', express.static(path.join(__dirname, 'public/images')));
 
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'public/images');
-  },
-  filename: (req, file, cb) => {
-    cb(null, req.body.name);
-  },
-});
-
-const upload = multer({ storage: storage });
-
-router.post('/upload', upload);
-
-router.post('/upload', upload.single('file'), (req, res) => {
-  try {
-    return res.status(200).json('File uploaded successfully');
-  } catch (error) {
-    console.error(error);
-  }
-});
 
 
 ///////////////////////
