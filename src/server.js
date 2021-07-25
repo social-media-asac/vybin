@@ -36,13 +36,13 @@ const userRoute  = require('./api/routes/users.js');
 /////////////////////////////
 //////// Middleware  ///////
 ///////////////////////////
+app.use('/images', express.static(path.join(__dirname, '../public/images')));
 
 app.use(express.json());
 app.use(cors());
 app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
-app.use('/images', express.static(path.join(__dirname, '../public/images')));
 
 /////////Ahmad///////
 
@@ -53,6 +53,27 @@ app.use('/images', express.static(path.join(__dirname, '../public/images')));
 
 app.use(express.static('./public'));
 
+
+
+// Images
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/images');
+  },
+  filename: (req, file, cb) => {
+    cb(null, req.body.name);
+  },
+});
+
+const upload = multer({ storage: storage });
+app.post('/api/v1/upload', upload.single('file'), (req, res) => {
+  try {
+    return res.status(200).json('File uploaded successfully');
+  } catch (error) {
+    console.error(error);
+  }
+});
 
 
 
@@ -82,25 +103,7 @@ function homeHandler(req,res){
 }
 
 
-// upload images
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'public/images');
-  },
-  filename: (req, file, cb) => {
-    cb(null, req.body.name);
-  },
-});
-
-const upload = multer({ storage: storage });
-app.post('/api/upload', upload.single('file'), (req, res) => {
-  try {
-    return res.status(200).json('File uploded successfully');
-  } catch (error) {
-    console.error(error);
-  }
-});
 
 //////////////////////////
 ////// Exports      /////
