@@ -36,7 +36,7 @@ const userRoute  = require('./api/routes/users.js');
 /////////////////////////////
 //////// Middleware  ///////
 ///////////////////////////
-app.use('/images', express.static(path.join(__dirname, '../public/images')));
+app.use('/images', express.static(path.join(__dirname, './public/images')));
 
 app.use(express.json());
 app.use(cors());
@@ -67,6 +67,7 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
+
 app.post('/api/v1/upload', upload.single('file'), (req, res) => {
   try {
     return res.status(200).json('File uploaded successfully');
