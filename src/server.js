@@ -4,6 +4,9 @@
 ////// Dependencies /////
 ////////////////////////
 
+
+
+
 const express = require('express');
 const app = express();
 const morgan= require('morgan');
@@ -36,7 +39,7 @@ const userRoute  = require('./api/routes/users.js');
 /////////////////////////////
 //////// Middleware  ///////
 ///////////////////////////
-app.use('/images', express.static(path.join(__dirname, './public/images')));
+app.use('/images', express.static(path.join(__dirname, '../public/images')));
 
 app.use(express.json());
 app.use(cors());
@@ -55,26 +58,6 @@ app.use(express.static('./public'));
 
 
 
-// Images
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, './public/images');
-  },
-  filename: (req, file, cb) => {
-    cb(null, req.body.name);
-  },
-});
-
-const upload = multer({ storage: storage });
-
-app.post('/api/v1/upload', upload.single('file'), (req, res) => {
-  try {
-    return res.status(200).json('File uploaded successfully');
-  } catch (error) {
-    console.error(error);
-  }
-});
 
 
 
@@ -84,6 +67,31 @@ app.post('/api/v1/upload', upload.single('file'), (req, res) => {
 
 // home
 app.get('/', homeHandler);
+
+
+// Images
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, '../public/images');
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
+// req.body.name
+
+const upload = multer({ storage: storage });
+
+
+app.post('/api/v1/upload', upload.single('file'), (req, res) => {
+  try {
+    return res.status(200).json('File uploaded successfully');
+  } catch (error) {
+    console.error(error);
+  }
+});
+
 
 // routes
 app.use('/api/v1/auth', authRoutes);
